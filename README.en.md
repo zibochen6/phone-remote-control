@@ -8,9 +8,10 @@
 
 No cable, no public IP, no root. One command turns a phone into an interface an agent can read and tap.
 
+[![CI](https://github.com/zibochen6/phone-remote-control/actions/workflows/ci.yml/badge.svg)](https://github.com/zibochen6/phone-remote-control/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-1f6feb.svg)](#requirements)
-[![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#supported-phones)
+[![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#requirements)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](CONTRIBUTING.md)
 
 [Quick start](#quick-start) · [Why not scrcpy?](#why-not-scrcpy--appium--uiautomator) · [Commands](#command-cheatsheet) · [Use cases](docs/use-cases.md) · [FAQ](#faq) · [中文](README.md)

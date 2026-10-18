@@ -45,28 +45,8 @@ jobs:
       - name: 运行测试
         run: bash tests/run-tests.sh
 
-      - name: 检查文档链接
-        run: |
-          python3 - <<'EOF'
-          import re, pathlib, sys
-          bad = []
-          for md in pathlib.Path('.').rglob('*.md'):
-              if '.git' in md.parts:
-                  continue
-              text = md.read_text(errors='ignore')
-              base = md.parent
-              for link in set(re.findall(r'\]\(([^)]+)\)', text)):
-                  if link.startswith(('http', '#', 'mailto')):
-                      continue
-                  target = link.split('#')[0]
-                  if target and not (base / target).exists():
-                      bad.append(f"{md}: {link}")
-          if bad:
-              print("坏链：")
-              print("\n".join(bad))
-              sys.exit(1)
-          print("✓ 文档链接全部有效")
-          EOF
+      - name: 检查文档链接与锚点
+        run: python3 tests/check-docs.py
 
   privacy:
     name: 隐私检查

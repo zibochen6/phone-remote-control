@@ -8,13 +8,14 @@
 
 不用数据线、不用公网 IP、不用 root。一条命令，手机变成 Agent 可以读、可以点的界面。
 
+[![CI](https://github.com/zibochen6/phone-remote-control/actions/workflows/ci.yml/badge.svg)](https://github.com/zibochen6/phone-remote-control/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-1f6feb.svg)](#环境要求)
-[![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#支持的手机)
+[![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#环境要求)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](CONTRIBUTING.md)
 [![Stars](https://img.shields.io/github/stars/zibochen6/phone-remote-control?style=social)](#)
 
-[快速开始](#30-秒上手) · [原理](#为什么不用-scrcpyappiumui Automator) · [命令](#命令速查) · [应用案例](docs/use-cases.md) · [FAQ](#faq) · [English](README.en.md)
+[快速开始](#30-秒上手) · [原理](#为什么不用-scrcpy--appium--uiautomator) · [命令](#命令速查) · [应用案例](docs/use-cases.md) · [FAQ](#faq) · [English](README.en.md)
 
 </div>
 
