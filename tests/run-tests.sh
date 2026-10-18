@@ -83,7 +83,12 @@ head_ "3. 配置文件权限"
 
 "$PHONE" status >/dev/null 2>&1 || true
 if [ -f "$PHONE_CONF" ]; then
-  perm="$(stat -f '%Lp' "$PHONE_CONF" 2>/dev/null || stat -c '%a' "$PHONE_CONF")"
+  # 注意：Linux 的 stat -f 是合法参数（打印文件系统信息，不是报错），
+  # 所以不能用 `stat -f ... || stat -c ...`，必须按系统分支判断。
+  case "$(uname -s)" in
+    Darwin) perm="$(stat -f '%Lp' "$PHONE_CONF")" ;;
+    *)      perm="$(stat -c '%a' "$PHONE_CONF")" ;;
+  esac
   if [ "$perm" = "600" ]; then ok "配置文件权限为 600"; else bad "配置文件权限为 $perm，应为 600"; fi
 else
   bad "未生成配置文件"
