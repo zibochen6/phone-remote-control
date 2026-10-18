@@ -43,6 +43,28 @@ case "$out" in
   *) bad "help 输出异常" "$(echo "$out" | head -2)" ;;
 esac
 
+# 回归：没装 adb 的机器上，help/version 仍然必须可用。
+# （CI 的 Linux runner 就没有 adb，这里用空目录遮住 PATH 模拟）
+NOADB="$TMPD/noadb"; mkdir -p "$NOADB"
+out="$(PHONE_FORCE_NO_ADB=1 "$PHONE" help 2>&1)"
+case "$out" in
+  *tap-text*) ok "缺 adb 时 help 仍可用" ;;
+  *) bad "缺 adb 时 help 不可用" "$(echo "$out" | head -2)" ;;
+esac
+
+out="$(PHONE_FORCE_NO_ADB=1 "$PHONE" --version 2>&1)"
+case "$out" in
+  *1.0.0*) ok "缺 adb 时 --version 仍可用" ;;
+  *) bad "缺 adb 时 --version 不可用" "$out" ;;
+esac
+
+# 但真正需要设备的命令必须报错退出，而不是静默成功
+if PHONE_FORCE_NO_ADB=1 "$PHONE" screen >/dev/null 2>&1; then
+  bad "缺 adb 时 screen 应报错却成功了"
+else
+  ok "缺 adb 时设备命令正确报错"
+fi
+
 out="$("$PHONE" --version 2>&1)"
 case "$out" in
   *1.0.0*) ok "版本号输出正常" ;;

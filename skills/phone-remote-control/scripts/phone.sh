@@ -56,13 +56,26 @@ find_bin() {
   return 1
 }
 
-ADB="$(find_bin "${ADB_BIN:-}" adb /opt/homebrew/bin/adb /usr/local/bin/adb \
-        "$HOME/Library/Android/sdk/platform-tools/adb" "$HOME/Android/Sdk/platform-tools/adb")" || {
+# PHONE_FORCE_NO_ADB=1 用于测试「没装 adb」的路径
+if [ "${PHONE_FORCE_NO_ADB:-0}" = "1" ]; then
+  ADB=""
+else
+  ADB="$(find_bin "${ADB_BIN:-}" adb /opt/homebrew/bin/adb /usr/local/bin/adb \
+          "$HOME/Library/Android/sdk/platform-tools/adb" "$HOME/Android/Sdk/platform-tools/adb" || true)"
+fi
+
+# adb 缺失时不要立刻退出：help / --version / doctor 仍然应该能用，
+# 否则用户装不上 adb 时连帮助都看不到。真正需要设备的命令才报错。
+require_adb() {
+  [ -n "$ADB" ] && return 0
   echo "错误：未找到 adb。" >&2
   echo "  macOS : brew install --cask android-platform-tools" >&2
   echo "  Linux : sudo apt install android-tools-adb" >&2
   echo "  Win   : 下载 https://developer.android.com/studio/releases/platform-tools" >&2
-  exit 127; }
+  echo "" >&2
+  echo "装好后重新运行本命令即可。查看全部命令：phone.sh help" >&2
+  exit 127
+}
 SCRCPY="$(find_bin "${SCRCPY_BIN:-}" scrcpy /opt/homebrew/bin/scrcpy /usr/local/bin/scrcpy || true)"
 TS="$(find_bin "${TAILSCALE_BIN:-}" tailscale /usr/local/bin/tailscale \
        /Applications/Tailscale.app/Contents/MacOS/Tailscale /opt/homebrew/bin/tailscale || true)"
@@ -973,6 +986,13 @@ cmd_reboot() {
 
 # ---------------------------------------------------------------- 入口
 [ $# -gt 0 ] || { cmd_help; exit 2; }
+
+# help / version / doctor 在没有 adb 时也应该能跑：
+# 一个连 adb 都没装的人，最需要看到的正是帮助和诊断信息。
+case "$1" in
+  help|-h|--help|version|-v|--version|doctor) ;;
+  *) require_adb ;;
+esac
 
 case "$1" in
   help|-h|--help) shift; cmd_help ;;
