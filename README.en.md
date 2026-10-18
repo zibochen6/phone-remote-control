@@ -315,7 +315,7 @@ PHONE_SERIAL=bbb222 phone.sh tap-text "OK"
 - [ ] Native Windows support (WSL2 for now)
 - [ ] More device reports
 
-Want something? [Open an issue](https://github.com/USER/phone-remote-control/issues).
+Want something? [Open an issue](https://github.com/zibochen6/phone-remote-control/issues).
 
 ---
 

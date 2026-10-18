@@ -12,7 +12,7 @@
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-1f6feb.svg)](#环境要求)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#支持的手机)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](CONTRIBUTING.md)
-[![Stars](https://img.shields.io/github/stars/USER/phone-remote-control?style=social)](#)
+[![Stars](https://img.shields.io/github/stars/zibochen6/phone-remote-control?style=social)](#)
 
 [快速开始](#30-秒上手) · [原理](#为什么不用-scrcpyappiumui Automator) · [命令](#命令速查) · [应用案例](docs/use-cases.md) · [FAQ](#faq) · [English](README.en.md)
 
@@ -410,7 +410,7 @@ PHONE_SERIAL=bbb222 phone.sh tap-text "确定"
 - [ ] Windows 原生支持（目前需 WSL2）
 - [ ] 更多机型的实测反馈
 
-有想做的功能？[开个 issue](https://github.com/USER/phone-remote-control/issues) 聊聊。
+有想做的功能？[开个 issue](https://github.com/zibochen6/phone-remote-control/issues) 聊聊。
 
 ---
 
