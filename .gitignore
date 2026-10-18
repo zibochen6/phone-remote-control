@@ -1,0 +1,25 @@
+# 本地配置（含设备 IP / 序列号，绝不入库）
+phone-remote.conf
+*.conf.local
+.env
+
+# 运行产物
+*.log
+/tmp/
+captures/
+recordings/
+
+# 未脱敏的原始截图（只提交 assets/ 下经过 privacy_scan 的成品）
+assets/raw/
+*.orig.png
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 系统
+.DS_Store
+Thumbs.db
+skills/phone-remote-control/scripts/.privacy_tmp/

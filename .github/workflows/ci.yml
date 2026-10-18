@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    name: 测试 (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装依赖 (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck python3
+          # tesseract 可选：装了才能跑隐私扫描相关测试
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-chi-sim || true
+
+      - name: 安装依赖 (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install shellcheck python3 || true
+          brew install tesseract tesseract-lang || true
+
+      - name: ShellCheck
+        run: |
+          shellcheck --version
+          shellcheck -S warning \
+            skills/phone-remote-control/scripts/phone.sh \
+            skills/phone-remote-control/scripts/privacy_scan.sh \
+            tests/run-tests.sh || echo "::warning::shellcheck 有告警（非阻塞）"
+
+      - name: Python 语法
+        run: python3 -m py_compile skills/phone-remote-control/scripts/ui_parse.py
+
+      - name: 运行测试
+        run: bash tests/run-tests.sh
+
+      - name: 检查文档链接
+        run: |
+          python3 - <<'EOF'
+          import re, pathlib, sys
+          bad = []
+          for md in pathlib.Path('.').rglob('*.md'):
+              if '.git' in md.parts:
+                  continue
+              text = md.read_text(errors='ignore')
+              base = md.parent
+              for link in set(re.findall(r'\]\(([^)]+)\)', text)):
+                  if link.startswith(('http', '#', 'mailto')):
+                      continue
+                  target = link.split('#')[0]
+                  if target and not (base / target).exists():
+                      bad.append(f"{md}: {link}")
+          if bad:
+              print("坏链：")
+              print("\n".join(bad))
+              sys.exit(1)
+          print("✓ 文档链接全部有效")
+          EOF
+
+  privacy:
+    name: 隐私检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装依赖
+        run: sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-chi-sim
+
+      - name: 扫描仓库内所有截图
+        run: |
+          shopt -s nullglob
+          imgs=$(ls assets/*.png assets/screens/*.png 2>/dev/null || true)
+          if [ -z "$imgs" ]; then
+            echo "没有需要扫描的图片"
+            exit 0
+          fi
+          bash skills/phone-remote-control/scripts/privacy_scan.sh --allow-time $imgs
